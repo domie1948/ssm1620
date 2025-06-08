@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.JiaoliuDao">
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.ys_types as ysTypes
+        ,a.yh_types as yhTypes
+        ,a.information_content as informationContent
+        ,a.information_time as informationTime
+        ,a.reply_content as replyContent
+    </sql>
+
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.JiaoliuView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM Jiaoliu  a
+        <where>
+            <if test=" params.ysTypes != '' and params.ysTypes != null">
+                and a.ys_types = #{params.ysTypes}
+            </if>
+            <if test=" params.yhTypes != '' and params.yhTypes != null">
+                and a.yh_types = #{params.yhTypes}
+            </if>
+            <if test=" params.informationContent != '' and params.informationContent != null and params.informationContent != 'null' ">
+                and a.information_content like CONCAT('%',#{params.informationContent},'%')
+            </if>
+            <if test=" params.informationTimeStart != '' and params.informationTimeStart != null and params.informationTimeStart != 'null' ">
+                and a.information_time &gt;= {params.informationTimeStart}
+            </if>
+            <if test=" params.informationTimeEnd != '' and params.informationTimeEnd != null and params.informationTimeEnd != 'null' ">
+                and a.information_time &lt;= {params.informationTimeEnd}
+            </if>
+            <if test=" params.replyContent != '' and params.replyContent != null and params.replyContent != 'null' ">
+                and a.reply_content like CONCAT('%',#{params.replyContent},'%')
+            </if>
+        </where>
+        order by a.id desc
+    </select>
+
+</mapper>
